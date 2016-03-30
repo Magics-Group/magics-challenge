@@ -47,10 +47,17 @@ router.post('/invite', function(req, res) {
           }
         } else {
           var error = body.error;
-          if (error === 'already_invited' || error === 'already_in_team') {
+          if (error === 'already_in_team') {
             res.render('result', {
-              message: 'Success! You were already invited to ' + config.community + '.<br>' +
-                       '<a href="https://'+ config.slackUrl +'">Go to the chat now</a>'
+              message: 'Success! You are already in ' + config.community,
+              subHeading: '<a href="https://'+ config.slackUrl +'">Go to the chat now</a>'   
+            });
+            return;
+          } else if (error === 'already_invited') {
+            // If you have lost email, you're fucked, we can't resend   
+            res.render('result', {
+              message: 'Success! You are already invited to join ' + config.community,
+              subHeading: 'Check your email to complete registration'
             });
             return;
           } else if (error === 'invalid_email') {
