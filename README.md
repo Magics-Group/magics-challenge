@@ -6,7 +6,7 @@ Magics Challenge
 
 ```
 npm install
-bin/www
+node bin/www
 ```
 
 You can access <http://localhost:3000> on your web browser.

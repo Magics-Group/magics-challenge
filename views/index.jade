@@ -19,8 +19,8 @@ html
       if !enabled
         .main
           .header
-            h1 Magics Group.
-            h2= disabledMessage
+            h1 !{config.community}
+            h2 !{config.disabledMessage}
       if enabled
         .main
           .header
@@ -31,7 +31,7 @@ html
               form(method="POST", action="/invite")#join-form.form
                 input(type="text", name="email", placeholder="Enter Your Email Address")#email.field
                 if tokenRequired
-                  input(type="text", name="token", placeholder="Enter Invite Key")#token.field
+                  input(type="text", name="token", placeholder="Enter Invite Key" autofocus)#token.field
                 input(type="submit", value="Join").submit
     script(src='js/particles.js')
     script.
@@ -39,7 +39,6 @@ html
       var tokenRequired = #{tokenRequired};
       if (enabled) {
         var form = document.getElementById('join-form');
-        var user = document.getElementById('user');
         var email = document.getElementById('email');
         var token = document.getElementById('token');
         var shake = function(what) {

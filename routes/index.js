@@ -3,7 +3,7 @@ var router = express.Router();
 var request = require('request');
 var config = require('../config');
 
-router.get('/', function(req, res) {
+router.get('*', function(req, res) {
   res.render('index', { community: config.community,
                         tokenRequired: !!config.inviteToken,
                         enabled: config.enabled,
@@ -16,7 +16,7 @@ router.post('/invite', function(req, res) {
         url: 'https://'+ config.slackUrl + '/api/users.admin.invite',
         form: {
           email: req.body.email,
-          token: config.slacktoken,
+          token: config.slackToken,
           set_active: true
         }
       }, function(err, httpResponse, body) {
@@ -28,31 +28,33 @@ router.post('/invite', function(req, res) {
         body = JSON.parse(body);
         if (body.ok) {
           res.render('result', {
-            community: config.community,
-            message: 'Success! Check your email.'
+            message: 'Success! Welcome to ' + config.community,
+            subHeading: 'Check your email to complete registration'    
           });
-          if (config.channel && (config.bottoken || config.slacktoken)) {
+          if (config.channel && (config.botToken || config.slackToken)) {
             request.post({
               url: 'https://' + config.slackUrl + '/api/chat.postMessage',
               form: {
                 text: 'Magics: ' + req.body.email + ' has just entered the valid token: *' + req.body.token + '*',
                 channel: config.channel,
-                token: config.bottoken || config.slacktoken,
+                token: config.botToken || config.slackToken,
                 as_user: true
               }
             });
+          }
+          if (config.disableAfterInvite) {
+            config.enabled = false;
           }
         } else {
           var error = body.error;
           if (error === 'already_invited' || error === 'already_in_team') {
             res.render('result', {
-              community: config.community,
-              message: 'Success! You were already invited.<br>' +
-                       'Visit to <a href="https://'+ config.slackUrl +'">'+ config.community +'</a>'
+              message: 'Success! You were already invited to ' + config.community + '.<br>' +
+                       '<a href="https://'+ config.slackUrl +'">Go to the chat now</a>'
             });
             return;
           } else if (error === 'invalid_email') {
-            error = 'The email you entered is an invalid email.';
+            error = 'You have entered an invalid email';
           } else if (error === 'invalid_auth') {
             error = 'Something has gone wrong. Please contact a system administrator.';
           }

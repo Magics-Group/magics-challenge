@@ -5,7 +5,7 @@
  */
 
 var app = require('../app');
-var debug = require('debug')('slack-invite-automation:server');
+var debug = require('debug')('magics-challenge:server');
 var http = require('http');
 
 /**
