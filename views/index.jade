@@ -16,15 +16,16 @@ html
   body
     #particles-js(style="z-index: -1; position: fixed; width: 100vw; height: 100vh;")
     #wrapper
+      - var headerMessage = 
       if !enabled
         .main
           .header
-            h1 !{config.community}
-            h2 !{config.disabledMessage}
+            h1 #{community} Group.
+            h2 #{disabledMessage}
       if enabled
         .main
           .header
-            h1 Magics Group.
+            h1 #{community} Group.
             h2 Can you find the key?
           .content
             .information
