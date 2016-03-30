@@ -75,6 +75,7 @@ router.post('/invite', function(req, res) {
       });
   } else {
     var errMsg = [];
+    var closed = false;
     if (!req.body.email) {
       errMsg.push('Your email is required');
     }
@@ -91,12 +92,14 @@ router.post('/invite', function(req, res) {
 
     if (!config.enabled) {
       errMsg.push('Registrations are currently closed');
+      closed = true;
     }
 
     res.render('result', {
       community: config.community,
       message: 'Failed! ' + errMsg.join(' and ') + '.',
-      isFailed: true
+      isFailed: true,
+      isClosed: closed
     });
   }
 });
